@@ -1,16 +1,13 @@
 let bloqueados = [];
 let historial = [];
-
-// =======================
-// FUNCIONES
-// =======================
+let favoritas = [];
 
 // Random
 function random(num) {
   return Math.floor(Math.random() * num);
 }
 
-// HSL → HEX
+// HSL --> HEX
 function hslToHex(h, s, l) {
   s /= 100;
   l /= 100;
@@ -78,6 +75,7 @@ function crearPaleta(cantidad) {
       hsl = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       hex = hslToHex(hue, saturation, lightness);
     }
+    
 
     const formato = formatoSelector.value;
     const colorMostrar = formato === "hex" ? hex : hsl;
@@ -133,6 +131,8 @@ function crearPaleta(cantidad) {
 boton.addEventListener("click", () => {
   const cantidad = Number(selector.value);
   crearPaleta(cantidad);
+
+  document.getElementById("guardar").addEventListener("click", guardarPaletaActual);
 
   const hue = random(360);
   const fondo = `hsl(${hue}, 60%, 50%)`;

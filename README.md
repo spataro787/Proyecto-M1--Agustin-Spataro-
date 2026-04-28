@@ -1,12 +1,14 @@
- Generador de paletas 
+# Generador de paletas 
 
-## Descripcion 
+## Descripcion
+- Aplicacion para el uso web de crear paletas aleatorias de colores. Permite generar, bloquear,guarda y utilizar formatos diferentes como el HLS y HEX. 
+
 ### Funciones 
 - Generacion de colores aleatorios 
 - Seleccion de cantidad de colores 
 - Visualizacion dinamica de la paleta 
 - Soporte para estilos de color 
-- Cambio de fonde con cada generacion 
+- 
 
 
 
@@ -23,8 +25,8 @@
 
 
   # Intalacio y uso 
-   ### 1 Clonar el repositorio
-             git clones https://github.com/spataro787/Proyecto-M1--Agustin-Spataron-.git
+   ### 1 
+             git clones  https://spataro787.github.io/Proyecto-M1--Agustin-Spataro-/
    ### 2 Abrir el proyecto 
        - Ingresas a la carpeta 
        - Abrir inedex.html en el navegador 
