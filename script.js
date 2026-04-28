@@ -1,52 +1,74 @@
-
-
-// Variedad//
 let bloqueados = [];
+let historial = [];
 
-//cCrear valores aleatorios de colores //
+// =======================
+// FUNCIONES
+// =======================
+
+// Random
 function random(num) {
   return Math.floor(Math.random() * num);
 }
-// Convierte un color de formato hsl --> hex//
+
+// HSL → HEX
 function hslToHex(h, s, l) {
-  s /= 100; 
+  s /= 100;
   l /= 100;
 
-  //Matematica para colores //
   const k = n => (n + h / 30) % 12;
   const a = s * Math.min(l, 1 - l);
 
-  // Calcula cada componenre//
   const f = n =>
-    Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))));
+    Math.round(
+      255 *
+        (l -
+          a *
+            Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))
+    );
 
-  //Comvierte los valores//
-  return( "#" + [f(0), f(8), f(4)]
-    .map(x => x.toString(16).padStart(2, "0"))
-    .join("") );
-  }
+  return (
+    "#" +
+    [f(0), f(8), f(4)]
+      .map(x => x.toString(16).padStart(2, "0"))
+      .join("")
+  );
+}
 
-// De js a html//
-const boton = document.getElementById("BotonCoor");
+// =======================
+// HISTORIAL
+// =======================
+function registrarAccion(tipo, detalle) {
+  const accion = {
+    tipo,
+    detalle,
+    fecha: new Date().toLocaleTimeString()
+  };
+
+  historial.push(accion);
+  console.log(historial);
+}
+
+// =======================
+// DOM
+// =======================
+const boton = document.getElementById("BotonColor");
 const paleta = document.getElementById("paleta");
 const selector = document.getElementById("cantidad");
 const formatoSelector = document.getElementById("formato");
 
-
-// Crea Paleta //
+// =======================
+// CREAR PALETA
+// =======================
 function crearPaleta(cantidad) {
   paleta.innerHTML = "";
 
-
-  // Crea un bloqueo visual para cada color //
   for (let i = 0; i < cantidad; i++) {
     const colorDiv = document.createElement("div");
     colorDiv.classList.add("color");
 
-
     let hsl, hex, hue, saturation, lightness;
 
-   if (bloqueados[i]) {
+    if (bloqueados[i]) {
       ({ hsl, hex, hue, saturation, lightness } = bloqueados[i]);
     } else {
       hue = random(360);
@@ -60,7 +82,6 @@ function crearPaleta(cantidad) {
     const formato = formatoSelector.value;
     const colorMostrar = formato === "hex" ? hex : hsl;
 
-    // HTML interno
     colorDiv.innerHTML = `
       <span>
         ${
@@ -74,10 +95,9 @@ function crearPaleta(cantidad) {
       <button class="lock">${bloqueados[i] ? "🔒" : "🔓"}</button>
     `;
 
-    // Aplica color
     colorDiv.style.setProperty("--color", hsl);
 
-    // BOTÓN BLOQUEO
+    // BLOQUEAR
     const lockBtn = colorDiv.querySelector(".lock");
 
     lockBtn.addEventListener("click", (e) => {
@@ -86,30 +106,34 @@ function crearPaleta(cantidad) {
       if (bloqueados[i]) {
         bloqueados[i] = null;
         lockBtn.textContent = "🔓";
+        registrarAccion("desbloquear", `Color ${i} desbloqueado`);
       } else {
         bloqueados[i] = { hsl, hex, hue, saturation, lightness };
         lockBtn.textContent = "🔒";
+        registrarAccion("bloquear", `Color ${i} bloqueado`);
       }
     });
 
-    // COPIAR COLOR
+    // COPIAR
     colorDiv.addEventListener("click", () => {
       navigator.clipboard.writeText(colorMostrar);
       alert("Copiado: " + colorMostrar);
+      registrarAccion("copiar", colorMostrar);
     });
 
     paleta.appendChild(colorDiv);
   }
+
+  registrarAccion("generar", `Se generaron ${cantidad} colores`);
 }
 
 // =======================
-// EVENTO BOTÓN
+// BOTÓN
 // =======================
 boton.addEventListener("click", () => {
   const cantidad = Number(selector.value);
   crearPaleta(cantidad);
 
-  // Cambia fondo
   const hue = random(360);
   const fondo = `hsl(${hue}, 60%, 50%)`;
   document.body.style.backgroundColor = fondo;
