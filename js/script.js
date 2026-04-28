@@ -1,6 +1,7 @@
 let bloqueados = [];
 let historial = [];
 let favoritas = [];
+let paletaActual = [];
 
 // =======================
 // UTILIDADES
@@ -53,10 +54,17 @@ const selectorCantidad = document.getElementById("cantidad");
 const selectorFormato = document.getElementById("formato");
 
 // =======================
-// CREAR PALETA
+// CREAR PALETA (FIX REAL)
 // =======================
 function crearPaleta(cantidad) {
   paleta.innerHTML = "";
+
+  // Mantener bloqueados si coincide la cantidad
+  if (bloqueados.length !== cantidad) {
+    bloqueados = new Array(cantidad).fill(null);
+  }
+
+  paletaActual = [];
 
   for (let i = 0; i < cantidad; i++) {
     const colorDiv = document.createElement("div");
@@ -64,8 +72,10 @@ function crearPaleta(cantidad) {
 
     let hsl, hex, hue, saturation, lightness;
 
+    // SI ESTA BLOQUEADO → reutilizar
     if (bloqueados[i]) {
       ({ hsl, hex, hue, saturation, lightness } = bloqueados[i]);
+      colorDiv.classList.add("locked");
     } else {
       hue = random(360);
       saturation = random(50) + 50;
@@ -85,24 +95,26 @@ function crearPaleta(cantidad) {
 
     colorDiv.style.setProperty("--color", hsl);
 
-    // BLOQUEAR
     const lockBtn = colorDiv.querySelector(".lock");
 
+    // BLOQUEAR / DESBLOQUEAR
     lockBtn.addEventListener("click", (e) => {
       e.stopPropagation();
 
       if (bloqueados[i]) {
         bloqueados[i] = null;
         lockBtn.textContent = "🔓";
+        colorDiv.classList.remove("locked");
         registrarAccion("desbloquear", `Color ${i}`);
       } else {
         bloqueados[i] = { hsl, hex, hue, saturation, lightness };
         lockBtn.textContent = "🔒";
+        colorDiv.classList.add("locked");
         registrarAccion("bloquear", `Color ${i}`);
       }
     });
 
-    // COPIAR
+    // COPIAR COLOR
     colorDiv.addEventListener("click", () => {
       navigator.clipboard.writeText(colorMostrar);
       alert("Copiado: " + colorMostrar);
@@ -110,6 +122,9 @@ function crearPaleta(cantidad) {
     });
 
     paleta.appendChild(colorDiv);
+
+    // guardar en estado actual
+    paletaActual.push({ hsl, hex });
   }
 
   registrarAccion("generar", `${cantidad} colores`);
@@ -119,24 +134,11 @@ function crearPaleta(cantidad) {
 // GUARDAR PALETA
 // =======================
 function guardarPaletaActual() {
-  const colores = [];
+  if (paletaActual.length === 0) return;
 
-  document.querySelectorAll(".color").forEach((div) => {
-    const hsl = getComputedStyle(div).getPropertyValue("--color").trim();
+  favoritas.push([...paletaActual]);
 
-    const valores = hsl.match(/\d+/g);
-    const [h, s, l] = valores.map(Number);
-
-    const hex = hslToHex(h, s, l);
-
-    colores.push({ hsl, hex });
-  });
-
-  favoritas.push(colores);
-
-  console.log("Favoritas:", favoritas);
-  registrarAccion("guardar", "Paleta guardada (HSL + HEX)");
-
+  registrarAccion("guardar", "Paleta guardada");
   mostrarFavoritas();
 }
 
@@ -145,10 +147,13 @@ function guardarPaletaActual() {
 // =======================
 function cargarPaleta(paletaGuardada) {
   paleta.innerHTML = "";
+  paletaActual = [...paletaGuardada];
+
+  bloqueados = new Array(paletaGuardada.length).fill(null);
 
   const formato = selectorFormato.value;
 
-  paletaGuardada.forEach((colorObj) => {
+  paletaGuardada.forEach((colorObj, i) => {
     const color = formato === "hex" ? colorObj.hex : colorObj.hsl;
 
     const colorDiv = document.createElement("div");
@@ -160,6 +165,22 @@ function cargarPaleta(paletaGuardada) {
     `;
 
     colorDiv.style.setProperty("--color", colorObj.hsl);
+
+    const lockBtn = colorDiv.querySelector(".lock");
+
+    lockBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      if (bloqueados[i]) {
+        bloqueados[i] = null;
+        lockBtn.textContent = "🔓";
+        colorDiv.classList.remove("locked");
+      } else {
+        bloqueados[i] = colorObj;
+        lockBtn.textContent = "🔒";
+        colorDiv.classList.add("locked");
+      }
+    });
 
     colorDiv.addEventListener("click", () => {
       navigator.clipboard.writeText(color);
@@ -173,12 +194,12 @@ function cargarPaleta(paletaGuardada) {
 }
 
 // =======================
-// ELIMINAR PALETA
+// ELIMINAR
 // =======================
 function eliminarPaleta(index) {
   favoritas.splice(index, 1);
   mostrarFavoritas();
-  registrarAccion("eliminar", `Paleta ${index + 1} eliminada`);
+  registrarAccion("eliminar", `Paleta ${index + 1}`);
 }
 
 // =======================
@@ -192,7 +213,6 @@ function mostrarFavoritas() {
     const wrapper = document.createElement("div");
     wrapper.classList.add("paleta-fav");
 
-    // PREVIEW
     const preview = document.createElement("div");
     preview.classList.add("preview");
 
@@ -203,14 +223,12 @@ function mostrarFavoritas() {
       preview.appendChild(mini);
     });
 
-    // BOTÓN CARGAR
     const btnCargar = document.createElement("button");
     btnCargar.textContent = "Cargar";
     btnCargar.addEventListener("click", () => {
       cargarPaleta(paletaGuardada);
     });
 
-    // BOTÓN ELIMINAR
     const btnEliminar = document.createElement("button");
     btnEliminar.textContent = "❌";
     btnEliminar.addEventListener("click", () => {
@@ -241,10 +259,9 @@ botonGenerar.addEventListener("click", () => {
 // Guardar
 botonGuardar.addEventListener("click", guardarPaletaActual);
 
-// Cambio de formato dinámico
+// Cambiar formato
 selectorFormato.addEventListener("change", () => {
-  const ultima = favoritas[favoritas.length - 1];
-  if (ultima) {
-    cargarPaleta(ultima);
+  if (paletaActual.length > 0) {
+    cargarPaleta(paletaActual);
   }
 });
