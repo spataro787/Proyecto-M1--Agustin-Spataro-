@@ -2,12 +2,13 @@ let bloqueados = [];
 let historial = [];
 let favoritas = [];
 
-// Random
+// =======================
+// UTILIDADES
+// =======================
 function random(num) {
   return Math.floor(Math.random() * num);
 }
 
-// HSL --> HEX
 function hslToHex(h, s, l) {
   s /= 100;
   l /= 100;
@@ -18,9 +19,7 @@ function hslToHex(h, s, l) {
   const f = n =>
     Math.round(
       255 *
-        (l -
-          a *
-            Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))
+        (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))))
     );
 
   return (
@@ -35,23 +34,23 @@ function hslToHex(h, s, l) {
 // HISTORIAL
 // =======================
 function registrarAccion(tipo, detalle) {
-  const accion = {
+  historial.push({
     tipo,
     detalle,
     fecha: new Date().toLocaleTimeString()
-  };
+  });
 
-  historial.push(accion);
   console.log(historial);
 }
 
 // =======================
 // DOM
 // =======================
-const boton = document.getElementById("BotonColor");
+const botonGenerar = document.getElementById("BotonColor");
+const botonGuardar = document.getElementById("guardar");
 const paleta = document.getElementById("paleta");
-const selector = document.getElementById("cantidad");
-const formatoSelector = document.getElementById("formato");
+const selectorCantidad = document.getElementById("cantidad");
+const selectorFormato = document.getElementById("formato");
 
 // =======================
 // CREAR PALETA
@@ -75,21 +74,12 @@ function crearPaleta(cantidad) {
       hsl = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
       hex = hslToHex(hue, saturation, lightness);
     }
-    
 
-    const formato = formatoSelector.value;
+    const formato = selectorFormato.value;
     const colorMostrar = formato === "hex" ? hex : hsl;
 
     colorDiv.innerHTML = `
-      <span>
-        ${
-          formato === "hex"
-            ? `<span class="letra">#</span><span class="numero">${hex.slice(1)}</span>`
-            : `hsl(<span class="numero">${hue}</span>, 
-                   <span class="numero">${saturation}%</span>, 
-                   <span class="numero">${lightness}%</span>)`
-        }
-      </span>
+      <span>${colorMostrar}</span>
       <button class="lock">${bloqueados[i] ? "🔒" : "🔓"}</button>
     `;
 
@@ -104,11 +94,11 @@ function crearPaleta(cantidad) {
       if (bloqueados[i]) {
         bloqueados[i] = null;
         lockBtn.textContent = "🔓";
-        registrarAccion("desbloquear", `Color ${i} desbloqueado`);
+        registrarAccion("desbloquear", `Color ${i}`);
       } else {
         bloqueados[i] = { hsl, hex, hue, saturation, lightness };
         lockBtn.textContent = "🔒";
-        registrarAccion("bloquear", `Color ${i} bloqueado`);
+        registrarAccion("bloquear", `Color ${i}`);
       }
     });
 
@@ -122,19 +112,139 @@ function crearPaleta(cantidad) {
     paleta.appendChild(colorDiv);
   }
 
-  registrarAccion("generar", `Se generaron ${cantidad} colores`);
+  registrarAccion("generar", `${cantidad} colores`);
 }
 
 // =======================
-// BOTÓN
+// GUARDAR PALETA
 // =======================
-boton.addEventListener("click", () => {
-  const cantidad = Number(selector.value);
+function guardarPaletaActual() {
+  const colores = [];
+
+  document.querySelectorAll(".color").forEach((div) => {
+    const hsl = getComputedStyle(div).getPropertyValue("--color").trim();
+
+    const valores = hsl.match(/\d+/g);
+    const [h, s, l] = valores.map(Number);
+
+    const hex = hslToHex(h, s, l);
+
+    colores.push({ hsl, hex });
+  });
+
+  favoritas.push(colores);
+
+  console.log("Favoritas:", favoritas);
+  registrarAccion("guardar", "Paleta guardada (HSL + HEX)");
+
+  mostrarFavoritas();
+}
+
+// =======================
+// CARGAR PALETA
+// =======================
+function cargarPaleta(paletaGuardada) {
+  paleta.innerHTML = "";
+
+  const formato = selectorFormato.value;
+
+  paletaGuardada.forEach((colorObj) => {
+    const color = formato === "hex" ? colorObj.hex : colorObj.hsl;
+
+    const colorDiv = document.createElement("div");
+    colorDiv.classList.add("color");
+
+    colorDiv.innerHTML = `
+      <span>${color}</span>
+      <button class="lock">🔓</button>
+    `;
+
+    colorDiv.style.setProperty("--color", colorObj.hsl);
+
+    colorDiv.addEventListener("click", () => {
+      navigator.clipboard.writeText(color);
+      alert("Copiado: " + color);
+    });
+
+    paleta.appendChild(colorDiv);
+  });
+
+  registrarAccion("cargar", "Paleta cargada");
+}
+
+// =======================
+// ELIMINAR PALETA
+// =======================
+function eliminarPaleta(index) {
+  favoritas.splice(index, 1);
+  mostrarFavoritas();
+  registrarAccion("eliminar", `Paleta ${index + 1} eliminada`);
+}
+
+// =======================
+// MOSTRAR FAVORITAS
+// =======================
+function mostrarFavoritas() {
+  const contenedor = document.getElementById("favoritas");
+  contenedor.innerHTML = "";
+
+  favoritas.forEach((paletaGuardada, index) => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("paleta-fav");
+
+    // PREVIEW
+    const preview = document.createElement("div");
+    preview.classList.add("preview");
+
+    paletaGuardada.forEach((colorObj) => {
+      const mini = document.createElement("div");
+      mini.classList.add("mini-color");
+      mini.style.background = colorObj.hsl;
+      preview.appendChild(mini);
+    });
+
+    // BOTÓN CARGAR
+    const btnCargar = document.createElement("button");
+    btnCargar.textContent = "Cargar";
+    btnCargar.addEventListener("click", () => {
+      cargarPaleta(paletaGuardada);
+    });
+
+    // BOTÓN ELIMINAR
+    const btnEliminar = document.createElement("button");
+    btnEliminar.textContent = "❌";
+    btnEliminar.addEventListener("click", () => {
+      eliminarPaleta(index);
+    });
+
+    wrapper.appendChild(preview);
+    wrapper.appendChild(btnCargar);
+    wrapper.appendChild(btnEliminar);
+
+    contenedor.appendChild(wrapper);
+  });
+}
+
+// =======================
+// EVENTOS
+// =======================
+
+// Generar
+botonGenerar.addEventListener("click", () => {
+  const cantidad = Number(selectorCantidad.value);
   crearPaleta(cantidad);
 
-  document.getElementById("guardar").addEventListener("click", guardarPaletaActual);
-
   const hue = random(360);
-  const fondo = `hsl(${hue}, 60%, 50%)`;
-  document.body.style.backgroundColor = fondo;
+  document.body.style.backgroundColor = `hsl(${hue}, 60%, 50%)`;
+});
+
+// Guardar
+botonGuardar.addEventListener("click", guardarPaletaActual);
+
+// Cambio de formato dinámico
+selectorFormato.addEventListener("change", () => {
+  const ultima = favoritas[favoritas.length - 1];
+  if (ultima) {
+    cargarPaleta(ultima);
+  }
 });

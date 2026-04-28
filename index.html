@@ -1,47 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Proyecto M1- FS - FT 74 </title>
-    <link rel="stylesheet" href="./css/style.css"/>
- </head>
+  <meta charset="UTF-8">
+  <title>Colorfly Studio</title>
+  <link rel="stylesheet" href="./css/style.css"/>
+</head>
 
+<body>
 
+  <div class="app">
 
- <body>
- <h1>
-Colorfly Studio</h1>
+    <!-- IZQUIERDA (APP PRINCIPAL) -->
+    <div class="contenido">
+      
+      <h1>Colorfly Studio</h1>
+      <h2>Generador de Paletas</h2>
 
-    <H2>Generador de Paletas</H2>
-    <main>
+      <main>
         <section>
 
-    <H3> Paletas</H3>
-        <label for="cantidad"> Diversos colores</label>
-        <label for="cantidad"></label>
-         <select id="cantidad">
-    <option value="6">6</option>
-     <option value="8">8</option> 
-<option value="9">9</option>  
- </select>    
+          <h3>Paletas</h3>
 
-<button id="BotonColor"> General Paleta 
-</button> 
+          <!-- Selector cantidad -->
+          <label for="cantidad">Cantidad de colores:</label>
+          <select id="cantidad">
+            <option value="6">6</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
 
+          <!-- Botones -->
+          <div class="acciones">
+            <button id="BotonColor">Generar Paleta</button>
+            <button id="guardar">Guardar Paleta</button>
+          </div>
 
-<label for="formato">Formato:</label>
-<select id="formato">
-  <option value="hsl">HSL</option>
-  <option value="hex">HEX</option>
-</select>
+          <!-- Formato -->
+          <label for="formato">Formato:</label>
+          <select id="formato">
+            <option value="hsl">HSL</option>
+            <option value="hex">HEX</option>
+          </select>
 
-<div id="paleta"></div>
+          <!-- Paleta -->
+          <div id="paleta"></div>
+
         </section>
-    </main>
+      </main>
 
-<script src="./js/script.js"></script>
+    </div>
 
+    
+    <aside class="sidebar">
+      <h3>Paletas guardadas</h3>
+      <div id="favoritas"></div>
+    </aside>
 
+  </div>
+
+  <script src="./js/script.js"></script>
 
 </body>
 </html>
