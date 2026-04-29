@@ -1,121 +1,112 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
+  background: #0a0a0a; /* menos negro puro */
+  color: #f5f5f5;
 }
 
-/* ESTRUCTURA PRINCIPAL */
+/* ESTRUCTURA */
 .app {
   display: flex;
   height: 100vh;
 }
 
-/* CONTENIDO CENTRAL */
+/* SIDEBAR */
+.sidebar {
+  width: 20%; /* más ancho */
+  background: #141414;
+  padding: 25px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  overflow-y: auto;
+  border-right: 1px solid #222;
+}
+
+/* FAVORITAS */
+#favoritas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* BOTONES */
+#favoritas button {
+  padding: 12px;
+  background: #2a2a2a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#favoritas button:hover {
+  background: #3a3a3a;
+}
+
+/* CONTENIDO */
 .contenido {
   flex: 1;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  text-align: center;
-}
-
-/* SIDEBAR (ARRIBA DERECHA) */
-.sidebar {
-  width: 260px;
-  background: #111;
-  color: white;
-  padding: 20px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  overflow-y: auto;
-}
-
-/* FAVORITAS ARRIBA */
-#favoritas {
-  order: -1;
-}
-
-/* BOTONES FAVORITAS */
-#favoritas button {
-  width: 100%;
-  padding: 10px;
-  background: #222;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-#favoritas button:hover {
-  background: #444;
 }
 
 /* PALETA */
 #paleta {
-  width: 520px;
-  margin: 20px auto;
+  width: 600px; /* más grande */
+  margin: 30px auto;
 
   display: grid;
   grid-template-rows: repeat(2, 1fr);
   grid-auto-flow: column;
 
-  gap: 15px;
-  padding: 10px;
+  gap: 20px;
+  padding: 15px;
 }
 
-/* TARROS (MEJORADOS 🔥) */
+/* TARRO */
 .color {
-  width: 110px;
-  height: 160px;
+  width: 130px; /* más grande */
+  height: 190px;
 
-  border-radius: 12px 12px 25px 25px;
-  border: 3px solid #222;
+  border-radius: 14px 14px 30px 30px;
+  border: 3px solid #333;
 
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 12px;
-  color: #111;
-
   overflow: hidden;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* EFECTO HOVER */
+/* HOVER */
 .color:hover {
-  transform: scale(1.1);
+  transform: scale(1.12);
   z-index: 10;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 15px 25px rgba(0,0,0,0.4);
 }
 
-/* TEXTO HEX */
-.color span {
-  font-size: 16px;
-  font-weight: bold;
-  position: relative;
-  z-index: 2;
-}
-
-/* TAPA DEL TARRO */
+/* TAPA */
 .color::before {
   content: "";
   position: absolute;
   top: 0;
   width: 100%;
-  height: 18px;
-  background: #444;
-  border-radius: 10px 10px 0 0;
+  height: 20px;
+  background: #555;
+  border-radius: 12px 12px 0 0;
+  z-index: 2;
 }
 
-/* COLOR DEL TARRO */
+/* COLOR INTERNO */
 .color::after {
   content: "";
   position: absolute;
@@ -126,91 +117,101 @@ body {
   z-index: 0;
 }
 
-/* CANDADO 🔒 */
+/* INFO */
+.color-info {
+  width: 92%;
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(8px);
+
+  padding: 8px 10px;
+  border-radius: 10px;
+
+  z-index: 3;
+}
+
+/* TEXTOS */
+.hex {
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.hsl {
+  font-size: 11px;
+  color: #bbb;
+}
+
+/* CANDADO */
 .lock {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-
+  background: rgba(0,0,0,0.7);
   border: none;
   cursor: pointer;
 
-  font-size: 14px;
-  padding: 6px;
+  font-size: 16px;
+  color: white;
 
   border-radius: 50%;
-  z-index: 20;
+  padding: 6px;
 
-  transition: transform 0.2s, background 0.2s;
+  transition: transform 0.2s;
 }
 
 .lock:hover {
-  transform: scale(1.2);
-  background: #f2ebec;
+  transform: scale(1.25);
 }
 
-/* ESTADO BLOQUEADO */
+/* BLOQUEADO */
 .color.locked {
-  border: 3px solid #fdfcfc;
+  border: 3px solid #fff;
 }
 
 /* TITULO */
 h1 {
-  font-size: 60px;
+  font-size: 70px; /* más grande */
+  margin-bottom: 10px;
+
   background: linear-gradient(
     90deg,
     red,
-    rgb(231, 226, 217),
-    rgb(41, 41, 30),
-    rgb(80, 127, 80),
-    rgb(38, 38, 110),
-    rgb(201, 37, 83)
+    white,
+    black,
+    green,
+    blue,
+    crimson
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* BOTONES GENERALES */
-button {
-  padding: 15px 25px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 10px;
-  border: none;
-}
-
 /* ACCIONES */
 .acciones {
   display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin: 15px 0;
+  gap: 15px;
+  margin: 20px 0;
 }
 
-/* TARJETAS FAVORITAS */
+/* FAVORITAS CARD */
 .paleta-fav {
-  background: #222;
-  padding: 10px;
-  border-radius: 10px;
+  background: #2a2a2a;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+/* PREVIEW */
+.preview {
+  display: flex;
+  gap: 6px;
   margin-bottom: 10px;
 }
 
-/* MINI PREVIEW */
-.preview {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 8px;
-}
-
 .mini-color {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-}
-
-.paleta-fav button {
-  margin-right: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
 }

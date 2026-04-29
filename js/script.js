@@ -54,12 +54,11 @@ const selectorCantidad = document.getElementById("cantidad");
 const selectorFormato = document.getElementById("formato");
 
 // =======================
-// CREAR PALETA (FIX REAL)
+// CREAR PALETA
 // =======================
 function crearPaleta(cantidad) {
   paleta.innerHTML = "";
 
-  // Mantener bloqueados si coincide la cantidad
   if (bloqueados.length !== cantidad) {
     bloqueados = new Array(cantidad).fill(null);
   }
@@ -72,7 +71,6 @@ function crearPaleta(cantidad) {
 
     let hsl, hex, hue, saturation, lightness;
 
-    // SI ESTA BLOQUEADO → reutilizar
     if (bloqueados[i]) {
       ({ hsl, hex, hue, saturation, lightness } = bloqueados[i]);
       colorDiv.classList.add("locked");
@@ -85,12 +83,15 @@ function crearPaleta(cantidad) {
       hex = hslToHex(hue, saturation, lightness);
     }
 
-    const formato = selectorFormato.value;
-    const colorMostrar = formato === "hex" ? hex : hsl;
-
+    // 👇 NUEVO DISEÑO (HEX + HSL)
     colorDiv.innerHTML = `
-      <span>${colorMostrar}</span>
-      <button class="lock">${bloqueados[i] ? "🔒" : "🔓"}</button>
+      <div class="color-info">
+        <div class="codes">
+          <span class="hex">${hex}</span>
+          <span class="hsl">${hsl}</span>
+        </div>
+        <button class="lock">${bloqueados[i] ? "🔒" : "🔓"}</button>
+      </div>
     `;
 
     colorDiv.style.setProperty("--color", hsl);
@@ -114,16 +115,15 @@ function crearPaleta(cantidad) {
       }
     });
 
-    // COPIAR COLOR
+    // COPIAR (solo HEX 👇)
     colorDiv.addEventListener("click", () => {
-      navigator.clipboard.writeText(colorMostrar);
-      alert("Copiado: " + colorMostrar);
-      registrarAccion("copiar", colorMostrar);
+      navigator.clipboard.writeText(hex);
+      alert("Copiado: " + hex);
+      registrarAccion("copiar", hex);
     });
 
     paleta.appendChild(colorDiv);
 
-    // guardar en estado actual
     paletaActual.push({ hsl, hex });
   }
 
@@ -151,17 +151,18 @@ function cargarPaleta(paletaGuardada) {
 
   bloqueados = new Array(paletaGuardada.length).fill(null);
 
-  const formato = selectorFormato.value;
-
   paletaGuardada.forEach((colorObj, i) => {
-    const color = formato === "hex" ? colorObj.hex : colorObj.hsl;
-
     const colorDiv = document.createElement("div");
     colorDiv.classList.add("color");
 
     colorDiv.innerHTML = `
-      <span>${color}</span>
-      <button class="lock">🔓</button>
+      <div class="color-info">
+        <div class="codes">
+          <span class="hex">${colorObj.hex}</span>
+          <span class="hsl">${colorObj.hsl}</span>
+        </div>
+        <button class="lock">🔓</button>
+      </div>
     `;
 
     colorDiv.style.setProperty("--color", colorObj.hsl);
@@ -183,8 +184,8 @@ function cargarPaleta(paletaGuardada) {
     });
 
     colorDiv.addEventListener("click", () => {
-      navigator.clipboard.writeText(color);
-      alert("Copiado: " + color);
+      navigator.clipboard.writeText(colorObj.hex);
+      alert("Copiado: " + colorObj.hex);
     });
 
     paleta.appendChild(colorDiv);
@@ -246,20 +247,13 @@ function mostrarFavoritas() {
 // =======================
 // EVENTOS
 // =======================
-
-// Generar
 botonGenerar.addEventListener("click", () => {
   const cantidad = Number(selectorCantidad.value);
   crearPaleta(cantidad);
-
-  const hue = random(360);
-  document.body.style.backgroundColor = `hsl(${hue}, 60%, 50%)`;
 });
 
-// Guardar
 botonGuardar.addEventListener("click", guardarPaletaActual);
 
-// Cambiar formato
 selectorFormato.addEventListener("change", () => {
   if (paletaActual.length > 0) {
     cargarPaleta(paletaActual);
