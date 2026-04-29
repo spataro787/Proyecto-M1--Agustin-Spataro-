@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,47 +11,59 @@
 
   <div class="app">
 
-    <!-- 🔥 SIDEBAR ARRIBA -->
+    <!-- 🔥 SIDEBAR -->
     <aside class="sidebar">
-      <h3>Paletas guardadas</h3>
+      <h2>Paletas guardadas</h2>
       <div id="favoritas"></div>
     </aside>
 
-    <!-- CONTENIDO -->
-    <div class="contenido">
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="contenido">
       
-      <h1>Colorfly Studio</h1>
-      <h2>Generador de Paletas</h2>
+      <!-- HEADER -->
+      <header class="header">
+        <div>
+          <h1>Colorfly Studio</h1>
+          <p>Generador de Paletas</p>
+        </div>
+        <p>Haz clic en la paleta para copiar el formato</p>
 
-      <main>
-        <section>
+      </header>
 
-          <h3>Paletas</h3>
+      <!-- SECCIÓN PRINCIPAL -->
+      <section>
+        <h2>Paletas</h2>
 
-          <label for="cantidad">Cantidad de colores:</label>
-          <select id="cantidad">
-            <option value="6">6</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-          </select>
+        <!-- CANTIDAD -->
+        <label for="cantidad">Cantidad de paletas</label>
+        <select id="cantidad">
+          <option value="6">6</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+        </select>
 
-          <div class="acciones">
-            <button id="BotonColor">Generar Paleta</button>
-            <button id="guardar">Guardar Paleta</button>
-          </div>
+        <!-- ACCIONES -->
+        <div class="acciones" role="group" aria-label="Acciones de paleta">
+          <button id="BotonColor">Generala paletas</button>
+          <button id="guardar">Guardar Paleta</button>
+        </div>
 
-          <label for="formato">Formato:</label>
-          <select id="formato">
-            <option value="hsl">HSL</option>
-            <option value="hex">HEX</option>
-          </select>
+        <!-- FORMATO -->
+        <label for="formato">Formato:</label>
+        <select id="formato">
+          <option value="hsl">HSL</option>
+          <option value="hex">HEX</option>
+        </select>
 
-          <div id="paleta"></div>
+        <!-- RESULTADO -->
+        <div id="paleta"></div>
 
-        </section>
-      </main>
+      </section>
 
-    </div>
+    </main>
+
+    <!-- NOTIFICACIÓN -->
+    <div id="toast" aria-live="polite"></div>
 
   </div>
 

@@ -1,29 +1,61 @@
-# Generador de paletas 
+🎨 Colorfly Studio
 
-## Descripcion
-Este proyecto es un generador de paletas de colores desarrollado con HTML, CSS y JavaScript. Permite crear combinaciones de colores de forma aleatoria y gestionar paletas de manera interactiva.
+Generador de paletas de colores interactivo, moderno y visual.
+Creá combinaciones únicas, bloqueá colores, guardá tus favoritas y copiá códigos fácilmente.
 
-Es ideal para diseñadores, desarrolladores o cualquier persona que necesite inspiración de colores para sus proyectos.
-### Funciones 
-- 🎲 Generación aleatoria de colores
-- 🔒 Bloqueo de colores para mantenerlos al generar nuevos
-- 🕘 Historial de paletas generadas
-- ⭐ Guardado de paletas favoritas
-- 🎨 Conversión de colores (HSL → HEX)
-- 💾 Persistencia de datos (bloqueos, historial y favoritos)
+🚀 Demo
+
+👉 https://spataro787.github.io/Proyecto-M1--Agustin-Spataro-/
+
+# Funcionalidades
+- 🎲 Generación aleatoria de paletas
+- 🔒 Bloqueo de colores individuales
+- 📋 Copiar colores en HEX o HSL
+- ⭐ Guardar paletas favoritas
+- 💾 Persistencia con LocalStorage
+- 🧠 Historial de acciones
+- 🔔 Notificaciones tipo toast
+- 🎯 Interfaz moderna y responsive
+- 🖼️ Vista previa
+
+### 🛠️ Tecnologías utilizadas
+- HTML5
+- CSS3
+- JavaScript
+- LocalStorage API
+ 
+## ⚙️ Decisiones Tecnicas
+🧠 Uso de JavaScript Vanilla
+- Mantener el proyecto liviano
+- Enfocarse en lógica pura de JavaScript
+- Facilitar el aprendizaje y comprension del código
+
+# Intricciones de uso
+- Seleccioná la cantidad de colores (6, 8 o 9).
+- Hacé click en el botón "Generar paleta".
+- Visualizá la paleta generada en pantalla.
+- Elegí el formato de color (HEX, HSL o RGBA).
+- Hacé click sobre cualquier color para copiar su código.
+
+# Imanguen 
+- 🖼️ Vista previa
+     - Proyecto M1
+     - Imaguen 
+     - ![alt text](<Imagen/Proyecto M1 Descripcion de la web.png>)
+
+### Estructura del proyecto
+#📦 Proyecto
+ - ┣ 📂 css
+ - ┃ ┗ style.css
+ - ┣ 📂 js
+ - ┃ ┗ script.js
+ - ┣ 📄 index.html
+ - ┗ 📄 README.md
 
 
-### Tecnologia utilizada 
-- HTML5 (Estructura semantica)
-- CSS (Estilos y diseños)
-- JavaScript (Logina manipulacion de DOM)
-
-### Estructura de proyecto
-📁 proyecto-paletas │── index.html │── style.css │── script.js │── README.md
-
-  # Intalacio y uso 
-   ### 1 
-             git clones  https://spataro787.github.io/Proyecto-M1--Agustin-Spataro-/
-   ### 2 Abrir el proyecto 
-       - Ingresas a la carpeta 
-       - Abrir inedex.html en el navegador 
+## Próximas mejoras
+- Exportar paletas como imagen
+- Modo claro / oscuro
+- Compartir paletas por link
+- Mejoras mobile
+- Ajustes manuales de color

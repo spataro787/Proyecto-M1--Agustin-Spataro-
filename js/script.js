@@ -3,9 +3,22 @@ let historial = [];
 let favoritas = [];
 let paletaActual = [];
 
-// =======================
-// UTILIDADES
-// =======================
+
+// (NOTIFICACIÓN)
+function mostrarToast(mensaje) {
+  const toast = document.getElementById("toast");
+
+  toast.textContent = mensaje;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+
+
+//UTILIDADES
+
 function random(num) {
   return Math.floor(Math.random() * num);
 }
@@ -31,9 +44,25 @@ function hslToHex(h, s, l) {
   );
 }
 
-// =======================
+
+// LOCAL STORAGE
+
+function guardarEnLocalStorage() {
+  localStorage.setItem("favoritas", JSON.stringify(favoritas));
+}
+
+function cargarDesdeLocalStorage() {
+  const data = localStorage.getItem("favoritas");
+
+  if (data) {
+    favoritas = JSON.parse(data);
+    mostrarFavoritas();
+  }
+}
+
+
 // HISTORIAL
-// =======================
+
 function registrarAccion(tipo, detalle) {
   historial.push({
     tipo,
@@ -44,18 +73,34 @@ function registrarAccion(tipo, detalle) {
   console.log(historial);
 }
 
-// =======================
+
 // DOM
-// =======================
 const botonGenerar = document.getElementById("BotonColor");
 const botonGuardar = document.getElementById("guardar");
 const paleta = document.getElementById("paleta");
 const selectorCantidad = document.getElementById("cantidad");
 const selectorFormato = document.getElementById("formato");
 
-// =======================
+
+// FORMATO
+function obtenerCodigo(colorObj) {
+  const formato = selectorFormato.value;
+
+  if (formato === "hex") {
+    return `
+      <span class="hex principal">${colorObj.hex}</span>
+      <span class="hsl secundario">${colorObj.hsl}</span>
+    `;
+  } else {
+    return `
+      <span class="hsl principal">${colorObj.hsl}</span>
+      <span class="hex secundario">${colorObj.hex}</span>
+    `;
+  }
+}
+
+
 // CREAR PALETA
-// =======================
 function crearPaleta(cantidad) {
   paleta.innerHTML = "";
 
@@ -83,12 +128,10 @@ function crearPaleta(cantidad) {
       hex = hslToHex(hue, saturation, lightness);
     }
 
-    // 👇 NUEVO DISEÑO (HEX + HSL)
     colorDiv.innerHTML = `
       <div class="color-info">
         <div class="codes">
-          <span class="hex">${hex}</span>
-          <span class="hsl">${hsl}</span>
+          ${obtenerCodigo({ hex, hsl })}
         </div>
         <button class="lock">${bloqueados[i] ? "🔒" : "🔓"}</button>
       </div>
@@ -98,7 +141,7 @@ function crearPaleta(cantidad) {
 
     const lockBtn = colorDiv.querySelector(".lock");
 
-    // BLOQUEAR / DESBLOQUEAR
+    // BLOQUEAR
     lockBtn.addEventListener("click", (e) => {
       e.stopPropagation();
 
@@ -106,45 +149,61 @@ function crearPaleta(cantidad) {
         bloqueados[i] = null;
         lockBtn.textContent = "🔓";
         colorDiv.classList.remove("locked");
+        mostrarToast("Color desbloqueado 🔓");
         registrarAccion("desbloquear", `Color ${i}`);
       } else {
         bloqueados[i] = { hsl, hex, hue, saturation, lightness };
         lockBtn.textContent = "🔒";
         colorDiv.classList.add("locked");
+        mostrarToast("Color bloqueado 🔒");
         registrarAccion("bloquear", `Color ${i}`);
       }
     });
 
-    // COPIAR (solo HEX 👇)
+    // COPIAR
     colorDiv.addEventListener("click", () => {
-      navigator.clipboard.writeText(hex);
-      alert("Copiado: " + hex);
-      registrarAccion("copiar", hex);
+      const formato = selectorFormato.value;
+      const codigo = formato === "hex" ? hex : hsl;
+
+      navigator.clipboard.writeText(codigo);
+      mostrarToast("Copiado: " + codigo);
+
+      registrarAccion("copiar", codigo);
     });
 
     paleta.appendChild(colorDiv);
-
     paletaActual.push({ hsl, hex });
   }
 
+  mostrarToast("Paleta generada 🎨");
   registrarAccion("generar", `${cantidad} colores`);
 }
 
-// =======================
-// GUARDAR PALETA
-// =======================
+
+// GUARDAR
 function guardarPaletaActual() {
   if (paletaActual.length === 0) return;
 
+  const existe = favoritas.some(p =>
+    JSON.stringify(p) === JSON.stringify(paletaActual)
+  );
+
+  if (existe) {
+    mostrarToast("Ya está guardada ⚠️");
+    return;
+  }
+
   favoritas.push([...paletaActual]);
 
-  registrarAccion("guardar", "Paleta guardada");
+  guardarEnLocalStorage();
   mostrarFavoritas();
+
+  mostrarToast("Paleta guardada ⭐");
+  registrarAccion("guardar", "Paleta guardada");
 }
 
-// =======================
-// CARGAR PALETA
-// =======================
+
+// CARGAR
 function cargarPaleta(paletaGuardada) {
   paleta.innerHTML = "";
   paletaActual = [...paletaGuardada];
@@ -158,8 +217,7 @@ function cargarPaleta(paletaGuardada) {
     colorDiv.innerHTML = `
       <div class="color-info">
         <div class="codes">
-          <span class="hex">${colorObj.hex}</span>
-          <span class="hsl">${colorObj.hsl}</span>
+          ${obtenerCodigo(colorObj)}
         </div>
         <button class="lock">🔓</button>
       </div>
@@ -176,36 +234,45 @@ function cargarPaleta(paletaGuardada) {
         bloqueados[i] = null;
         lockBtn.textContent = "🔓";
         colorDiv.classList.remove("locked");
+        mostrarToast("Color desbloqueado 🔓");
       } else {
         bloqueados[i] = colorObj;
         lockBtn.textContent = "🔒";
         colorDiv.classList.add("locked");
+        mostrarToast("Color bloqueado 🔒");
       }
     });
 
     colorDiv.addEventListener("click", () => {
-      navigator.clipboard.writeText(colorObj.hex);
-      alert("Copiado: " + colorObj.hex);
+      const formato = selectorFormato.value;
+      const codigo =
+        formato === "hex" ? colorObj.hex : colorObj.hsl;
+
+      navigator.clipboard.writeText(codigo);
+      mostrarToast("Copiado: " + codigo);
     });
 
     paleta.appendChild(colorDiv);
   });
 
+  mostrarToast("Paleta cargada 📂");
   registrarAccion("cargar", "Paleta cargada");
 }
 
-// =======================
+
 // ELIMINAR
-// =======================
 function eliminarPaleta(index) {
   favoritas.splice(index, 1);
+
+  guardarEnLocalStorage();
   mostrarFavoritas();
+
+  mostrarToast("Paleta eliminada ❌");
   registrarAccion("eliminar", `Paleta ${index + 1}`);
 }
 
-// =======================
-// MOSTRAR FAVORITAS
-// =======================
+
+// FAVORITAS
 function mostrarFavoritas() {
   const contenedor = document.getElementById("favoritas");
   contenedor.innerHTML = "";
@@ -244,9 +311,8 @@ function mostrarFavoritas() {
   });
 }
 
-// =======================
-// EVENTOS
-// =======================
+
+// EvENTOS
 botonGenerar.addEventListener("click", () => {
   const cantidad = Number(selectorCantidad.value);
   crearPaleta(cantidad);
@@ -259,3 +325,5 @@ selectorFormato.addEventListener("change", () => {
     cargarPaleta(paletaActual);
   }
 });
+
+cargarDesdeLocalStorage();
