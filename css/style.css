@@ -121,9 +121,9 @@ body {
   z-index: 0;
 }
 
-/* =======================
-   INFO (CÓDIGOS)
-======================= */
+/*
+   INFO (CÓDIGOS)*/
+
 .color-info {
   width: 92%;
   margin-bottom: 12px;
@@ -163,9 +163,7 @@ body {
   opacity: 0.85;
 }
 
-/* =======================
-   CANDADO
-======================= */
+/*  CANDADO */
 .lock {
   background: rgba(0,0,0,0.7);
   border: none;
@@ -189,9 +187,7 @@ body {
   border: 3px solid #ffffff;
 }
 
-/* =======================
-   TITULOS
-======================= */
+/*   TITULOS */
 h1 {
   font-size: 70px;
   margin-bottom: 10px;
@@ -220,9 +216,7 @@ h3 {
   color: #aaa;
 }
 
-/* =======================
-   CONTROLES
-======================= */
+/* CONTROLES */
 select, button {
   font-size: 16px;
   padding: 10px 14px;
@@ -247,9 +241,7 @@ button:hover {
   margin: 20px 0;
 }
 
-/* =======================
-   FAVORITAS
-======================= */
+/* FAVORITAS */
 .paleta-fav {
   background: #2a2a2a;
   padding: 12px;
@@ -295,6 +287,7 @@ button:hover {
 
   padding: 12px 18px;
   border-radius: 10px;
+  
 
   opacity: 0;
   transform: translateY(20px);

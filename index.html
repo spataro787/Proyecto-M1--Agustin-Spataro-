@@ -10,17 +10,18 @@
 <body>
 
   <div class="app">
+    
 
-    <!-- 🔥 SIDEBAR -->
+
     <aside class="sidebar">
       <h2>Paletas guardadas</h2>
       <div id="favoritas"></div>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    
     <main class="contenido">
       
-      <!-- HEADER -->
+    
       <header class="header">
         <div>
           <h1>Colorfly Studio</h1>
@@ -30,11 +31,11 @@
 
       </header>
 
-      <!-- SECCIÓN PRINCIPAL -->
+
       <section>
         <h2>Paletas</h2>
 
-        <!-- CANTIDAD -->
+    
         <label for="cantidad">Cantidad de paletas</label>
         <select id="cantidad">
           <option value="6">6</option>
@@ -42,27 +43,27 @@
           <option value="9">9</option>
         </select>
 
-        <!-- ACCIONES -->
+        
         <div class="acciones" role="group" aria-label="Acciones de paleta">
           <button id="BotonColor">Generala paletas</button>
           <button id="guardar">Guardar Paleta</button>
         </div>
 
-        <!-- FORMATO -->
+        
         <label for="formato">Formato:</label>
         <select id="formato">
           <option value="hsl">HSL</option>
           <option value="hex">HEX</option>
         </select>
 
-        <!-- RESULTADO -->
+        
         <div id="paleta"></div>
 
       </section>
 
     </main>
 
-    <!-- NOTIFICACIÓN -->
+    
     <div id="toast" aria-live="polite"></div>
 
   </div>

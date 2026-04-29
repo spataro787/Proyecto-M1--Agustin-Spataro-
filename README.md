@@ -1,7 +1,7 @@
 🎨 Colorfly Studio
 
 Generador de paletas de colores interactivo, moderno y visual.
-Creá combinaciones únicas, bloqueá colores, guardá tus favoritas y copiá códigos fácilmente.
+ Creá combinaciones únicas, bloqueá colores, guardá tus favoritas y copiá códigos fácilmente.
 
 🚀 Demo
 
@@ -14,15 +14,13 @@ Creá combinaciones únicas, bloqueá colores, guardá tus favoritas y copiá c�
 - ⭐ Guardar paletas favoritas
 - 💾 Persistencia con LocalStorage
 - 🧠 Historial de acciones
-- 🔔 Notificaciones tipo toast
 - 🎯 Interfaz moderna y responsive
-- 🖼️ Vista previa
 
 ### 🛠️ Tecnologías utilizadas
 - HTML5
 - CSS3
 - JavaScript
-- LocalStorage API
+- LocalStorage 
  
 ## ⚙️ Decisiones Tecnicas
 🧠 Uso de JavaScript Vanilla
@@ -37,11 +35,11 @@ Creá combinaciones únicas, bloqueá colores, guardá tus favoritas y copiá c�
 - Elegí el formato de color (HEX, HSL o RGBA).
 - Hacé click sobre cualquier color para copiar su código.
 
-# Imanguen 
+# Imaguen 
 - 🖼️ Vista previa
      - Proyecto M1
      - Imaguen 
-     - ![alt text](<Imagen/Proyecto M1 Descripcion de la web.png>)
+     - ![alt text](<Imagen/Proyecto M1 Descripcion de uso de la web.png>)
 
 ### Estructura del proyecto
 #📦 Proyecto

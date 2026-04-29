@@ -301,7 +301,7 @@ function mostrarFavoritas() {
     btnEliminar.textContent = "❌";
     btnEliminar.addEventListener("click", () => {
       eliminarPaleta(index);
-    });
+  });
 
     wrapper.appendChild(preview);
     wrapper.appendChild(btnCargar);
